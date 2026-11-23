@@ -57,9 +57,22 @@ No need to re-explain the project. Say "开始工程" plus the new requirement �
 
 ## How it works (overview)
 
-Complex tasks are split across role agents — **Product → Architect → Developer → Tester → Reviewer → Ops**. They run in **strict artifact-dependency order**: a downstream role starts only after the upstream handoff is on disk; conditional parallelism happens only inside one role when its units own non-overlapping files. A defect in an upstream artifact freezes downstream and returns that artifact for revision, so errors don't propagate.
+Complex tasks advance through six roles, each with a clear job:
 
-Only **three decisions are yours**: confirm acceptance criteria, confirm tech choices, and go/no-go when deployment is involved; the agent drives the rest by discipline.
+| Role | What it does for you | What you get when it's done | Who decides |
+|---|---|---|---|
+| Product | Turns your vague idea into clear requirements with acceptance criteria | A requirements doc (goals / user stories / priorities) | **You**: confirm acceptance |
+| Architect | Designs the initial structure from the confirmed requirements, picks language and stack | Architecture decisions + interface contract | **You**: confirm tech choices |
+| Developer | Writes code in small, compilable steps against a plan | Working code + execution plan | Agent self-check |
+| Tester | Writes tests, probes edge cases, pastes real command output | Test report + verifiable run evidence | Agent self-check |
+| Reviewer | Reviews the diff and evidence, finds issues and fixes | Review verdict + issue list | Agent self-audit; you only if disputed |
+| Ops | Prepares release material and a rollback plan | Release checklist + rollback plan + watch items | **You**: go/no-go |
+
+The six roles run in **strict artifact-dependency order**: a downstream role starts only after the upstream handoff is on disk; conditional parallelism happens only inside one role when its units own non-overlapping files. A defect in an upstream artifact freezes downstream and returns that artifact for revision, so errors don't propagate.
+
+Only **three decisions are yours** (marked in the table): confirm acceptance criteria, confirm tech choices, and go/no-go when deployment is involved; the agent drives the rest by discipline.
+
+**If your agent software has no multi-agent support**: no problem. A single agent plays the six roles in order, writes each intermediate artifact to a file, and the next phase reads it to continue. Ordering, gates, verification, and memory accumulation all stay the same — you just lose the speed of parallelism. This is not a degraded mode; it's the single-threaded form of the same discipline.
 
 This is **discipline and verifiability, not a system-enforced hook**: it makes violations and unverified claims visible and checkable, but cannot physically stop an agent from bypassing the flow.
 
@@ -67,8 +80,18 @@ Full runtime rules and engineering memory: `SKILL.md`. Six-role detail: `workflo
 
 ## When to use it
 
-- **Good fit**: work with real scale or multi-person / multi-agent collaboration, auditable process needs, quality over speed.
-- **Poor fit**: pure chat, research, non-code tasks; tiny one-off edits can trim the flow.
+**Good fit:**
+- Code-engineering work with real scale or multi-person / multi-agent collaboration: new features, refactors, cross-module changes.
+- Long-lived projects where rules and decisions must accumulate across sessions instead of getting lost in chat.
+- Work that needs an auditable process: who confirmed requirements, who signed off on the stack, whether claims have real output behind them.
+- Cases where quality and process discipline matter more than "fastest possible output": production code, open source, team projects.
+- Agents with subagent support can let the six roles truly collaborate in parallel; without it, the same flow still runs single-threaded (see "How it works").
+
+**Poor fit / trim as needed:**
+- Pure chat, research, or documentation tasks — non-code work doesn't trigger this skill.
+- One-shot tiny edits (typo, constant tweak): skip the full handoff set, trim to the minimum.
+- Strongly sequential tightly coupled work (e.g. TDD red→green→refactor): single agent, no forced parallelism.
+- Expecting system-level enforcement: this is discipline, not a hook — it cannot physically stop an agent from bypassing the flow.
 
 ## Directory structure
 
