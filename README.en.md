@@ -43,28 +43,34 @@ Once triggered: determine the task type → read the relevant rule layer → cod
 
 1. **Install**: see "Installation" below — put the directory in your agent's skills location and reload.
 2. **Trigger**: say "开始工程" (the exact four Chinese characters), or let the skill auto-load during day-to-day coding / bug fixing / refactoring / review per its description.
-3. **Classify the task**: requirements clarification → new feature (`workflows/feature.md`) / bugfix (`bugfix.md`) / refactor (`refactor.md`) / investigate (`investigate.md`).
-4. **Pass gates before coding**: confirm G1 (requirements / PRD with testable acceptance) and G2 (design / ADR + contract); if not passed, fill the upstream first — no implementation code.
-5. **Read layers on demand**: read the matching `core/` file when entering a phase; **before writing code**, read the relevant `languages/` file for the detected main language; layer in `topics/` for security / performance / concurrency / API design. Don't read everything at once.
-6. **Multi-agent collaboration** (optional): roles follow artifact-dependency order in form A (sequential role pipeline); enable form B parallelism only inside the developer role / test preparation when files don't overlap and all three gates pass. A defect in an upstream artifact freezes downstream and returns that artifact to its role. See `workflows/multi-agent-feature.md`.
-7. **Code & verify**: small commits, comment public APIs; run real commands and paste real output; label claims measured / inferred / guessed; after two failures, attack the premises.
-8. **Integrate & deliver**: for multi-module work run end-to-end checks — every state write must be verified as "write-then-read"; then review self-audit → delivery notes → (human go/no-go if deployment is involved); write rule changes back to `.project_memory/`.
-9. **Wrap up**: ask for the next requirement and whether anything needs adjusting, then stop and wait.
+3. **Classify the starting point**: empty project → discuss architecture / language / naming first; code exists but no memory → read source and distill rules, then build the memory; code and memory both present → read `INDEX.md` and follow existing rules. **See the flow below and `SKILL.md` §5.**
+4. **Classify the task**: requirements clarification → new feature (`workflows/feature.md`) / bugfix (`bugfix.md`) / refactor (`refactor.md`) / investigate (`investigate.md`).
+5. **Pass gates before coding**: confirm G1 (requirements / PRD with testable acceptance) and G2 (design / ADR + contract); if not passed, fill the upstream first — no implementation code.
+6. **Read layers on demand**: read the matching `core/` file when entering a phase; **before writing code**, read the relevant `languages/` file for the detected main language; layer in `topics/` for security / performance / concurrency / API design. Don't read everything at once.
+7. **Multi-agent collaboration** (optional): roles follow artifact-dependency order in form A (sequential role pipeline); enable form B parallelism only inside the developer role / test preparation when files don't overlap and all three gates pass. A defect in an upstream artifact freezes downstream and returns that artifact to its role. See `workflows/multi-agent-feature.md`.
+8. **Code & verify**: small commits, comment public APIs; run real commands and paste real output; label claims measured / inferred / guessed; after two failures, attack the premises.
+9. **Integrate & deliver**: for multi-module work run end-to-end checks — every state write must be verified as "write-then-read"; then review self-audit → delivery notes → (human go/no-go if deployment is involved); write rule changes back to `.project_memory/`.
+10. **Wrap up**: ask for the next requirement and whether anything needs adjusting, then stop and wait.
 
 > Remember: the entry `SKILL.md` is navigation — read the detailed rules on demand via its tables, never from memory.
 
 ### Flow at a glance
 
-The full path from "开始工程" to delivery. **Only three places need a human decision** (marked `[human]`): confirm acceptance criteria (G1), confirm tech choices (G2), and go/no-go for release; the agent drives everything else through the gates.
+The full path from "开始工程" to delivery. **Only three places need a human decision** (marked `[human]`): confirm acceptance criteria (G1), confirm tech choices (G2), and go/no-go for release; the agent drives everything else through the gates. **The first step is classifying the starting point** — the three starts have different preludes, then merge into the same requirement loop.
 
 ```text
 Start engineering
+ ├─ Classify starting point (locate project root → code? / .project_memory?)
+ │   ├─ A Empty project: discuss architecture / language / naming / stack with user (never invent) → persist as contract
+ │   ├─ B Code exists, no memory: read all source → distill architecture/naming/conventions (each with file-path evidence)
+ │   │    → flag questionable designs, negotiate with user → create .project_memory skeleton
+ │   └─ C Code and memory both exist: read INDEX.md + all layers first → follow existing rules, no unasked rewrite
  ├─ Classify task (feature / bugfix / refactor / investigate)
  ├─ Requirements clarification → PRD: goals / stories / acceptance
  │    └─ [human] G1 confirm acceptance — if rejected, back to requirements
  ├─ Design → ADR + initial architecture (modules / data flow / contracts)
- ├─ Pick language & stack → read matching languages file + fix dependencies
- │    └─ [human] G2 confirm tech choices — if rejected, back to design
+ │    └─ Start A sets language & stack here; starts B/C reuse or negotiate changes to existing conventions
+ │         └─ [human] G2 confirm tech choices — if rejected, back to design
  ├─ Plan breakdown → PLAN.md: small steps + acceptance
  ├─ Implementation → small commits / comment public APIs
  │    └─ G3 narrow checks + typecheck — if failed, back to implementation
@@ -76,7 +82,7 @@ Start engineering
  └─ Ask next requirement + anything to adjust → stop and wait
 ```
 
-> Small tasks trim per ACDL: some handoffs may be skipped, but the G1 entry condition (no code before requirements are clear) is never trimmed.
+> Starting-point rules, directory-collision fallback (`.project_memory_engineer/`), and memory setup rules: `SKILL.md` §5 and `core/project-memory.md` §3. Small tasks trim per ACDL: some handoffs may be skipped, but the G1 entry condition (no code before requirements are clear) is never trimmed.
 
 ## How it works
 
