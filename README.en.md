@@ -36,9 +36,20 @@ A four-layer architecture, **thin entry + read on demand** — `SKILL.md` keeps 
 | L3 Language rules | `languages/` | **After identifying the project's main language, before writing any code** — read that language's file |
 | L4 Cross-cutting topics | `topics/` | Layer in when the task touches security / performance / concurrency / API design / refactoring |
 
-### Role × Phase × Handoff view
+### Six Phases (Role × Phase × Handoff)
 
-An orthogonal view layered on top of the four directories: six roles (product / architect / developer / tester / reviewer / ops), each with **entry conditions** (hard gates), **structured handoffs** (PRD / ADR / contract / PLAN / test report / Brief+findings / release checklist), and **exit criteria**. If upstream conditions aren't met, stop at the current phase and say exactly "what's missing and from whom" — never carry unconfirmed upstream artifacts forward.
+Layered on top of the four directories is a **six-phase pipeline** — Product → Architect → Developer → Tester → Reviewer → Ops. Every phase has explicit **entry conditions**, **structured handoffs**, and **exit criteria**:
+
+| Phase | Role | Entry condition (hard gate) | Handoff | Exit criteria |
+|---|---|---|---|---|
+| ① Requirements | Product | Requirement input in hand (testable-acceptance seed or raw material to clarify) | **PRD** (goals / user stories / priorities / open questions) | Human confirms acceptance criteria (G1) → design may start |
+| ② Design | Architect | G1 passed: PRD exists, acceptance criteria confirmed and on disk | **ADR** (what/why/trade-offs) + interface contract + two sketches | Human confirms tech choices (G2) → coding may start |
+| ③ Implementation | Developer | G2 passed: ADR + contract on disk, choices confirmed | Compilable small commits + **PLAN.md** | Narrow checks / typecheck pass (G3) → testing may start |
+| ④ Test & Verify | Tester | G3 passed: code compiles, narrow checks pass, handoffs complete | Test code + coverage/edge-case report + real output | All green with complete evidence grading → review may start |
+| ⑤ Review | Reviewer | Tests green, evidence complete; unchecked changes are not sent for review | **Brief** + **findings** (id/severity/file:line/issue/fix) | VERDICT: APPROVE, ≤4 rounds → delivery may start |
+| ⑥ Delivery & Release | Ops | Review APPROVE, PR/merge notes ready | PR/merge notes → release checklist + rollback plan + watch items | Human makes go/no-go → may release |
+
+**Bidirectional hard-gate discipline**: each phase gates both entry and exit — if entry conditions aren't met, stop at the current phase and say exactly "what's missing and from whom", never carry unconfirmed upstream artifacts forward; if exit criteria aren't met, don't release the downstream phase. Architecture choices, go/no-go, and incident command belong to humans; the agent only generates/analyzes/assists. Small tasks may trim "which phases leave handoffs" per ACDL, but **entry conditions are not what gets trimmed** — if requirements aren't clear (G1 not passed), implementation code must not be written.
 
 ### Three hard phase gates
 
