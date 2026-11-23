@@ -53,33 +53,27 @@ Once triggered: determine the task type → read the relevant rule layer → cod
 
 > Remember: the entry `SKILL.md` is navigation — read the detailed rules on demand via its tables, never from memory.
 
-### Usage flow
+### Flow at a glance
 
-The full path from "开始工程" to delivery. **Humans make only three calls: confirm acceptance criteria (G1), confirm tech choices (G2), and go/no-go for release**; the agent drives everything else through the gates.
+The full path from "开始工程" to delivery. **Only three places need a human decision** (marked `[human]`): confirm acceptance criteria (G1), confirm tech choices (G2), and go/no-go for release; the agent drives everything else through the gates.
 
-```mermaid
-flowchart TD
-    A[User says 开始工程] --> B[Classify task<br/>feature / bugfix / refactor / investigate]
-    B --> C[Requirements clarification<br/>agent guides PRD: goals / stories / acceptance]
-    C --> D{Acceptance confirmed?<br/>G1}
-    D -- No --> C
-    D -- Yes --> E[Design<br/>agent guides initial architecture: modules / data flow / contracts]
-    E --> F[Pick language & stack<br/>read matching languages file + fix dependency constraints]
-    F --> G{Tech choices confirmed?<br/>G2}
-    G -- No --> E
-    G -- Yes --> H[Plan breakdown<br/>PLAN.md: small steps + acceptance]
-    H --> I[Implementation<br/>small commits / comment public APIs]
-    I --> J{Narrow checks + typecheck?<br/>G3}
-    J -- No --> I
-    J -- Yes --> K[Test & verify<br/>edge cases + real output + evidence grading]
-    K --> L[Integration<br/>end-to-end + write-then-read]
-    L --> M[Review self-audit<br/>Brief + findings / ≤4 rounds]
-    M --> N[Delivery notes<br/>rule changes → .project_memory]
-    N --> O{Deployment involved?<br/>human go/no-go}
-    O -- Yes --> P[Release checklist + rollback + watch items]
-    O -- No --> Q[Ask next requirement + anything to adjust]
-    P --> Q
-    Q --> R([Stop and wait])
+```text
+Start engineering
+ ├─ Classify task (feature / bugfix / refactor / investigate)
+ ├─ Requirements clarification → PRD: goals / stories / acceptance
+ │    └─ [human] G1 confirm acceptance — if rejected, back to requirements
+ ├─ Design → ADR + initial architecture (modules / data flow / contracts)
+ ├─ Pick language & stack → read matching languages file + fix dependencies
+ │    └─ [human] G2 confirm tech choices — if rejected, back to design
+ ├─ Plan breakdown → PLAN.md: small steps + acceptance
+ ├─ Implementation → small commits / comment public APIs
+ │    └─ G3 narrow checks + typecheck — if failed, back to implementation
+ ├─ Test & verify → edge cases / real output / evidence grading
+ ├─ Integration → end-to-end + write-then-read
+ ├─ Review self-audit → Brief + findings (≤4 rounds)
+ ├─ Delivery notes → rule changes back to .project_memory
+ │    └─ [human] if deploying: go/no-go → checklist + rollback + watch items
+ └─ Ask next requirement + anything to adjust → stop and wait
 ```
 
 > Small tasks trim per ACDL: some handoffs may be skipped, but the G1 entry condition (no code before requirements are clear) is never trimmed.
