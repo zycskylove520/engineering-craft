@@ -25,6 +25,34 @@ Say **"开始工程"** (the exact four Chinese characters) to enter the engineer
 
 Once triggered: determine the task type → read the relevant rule layer → code by the flow → verify → deliver → (release/operate if deployment is involved) → ask for the next requirement.
 
+## When to use it
+
+**Good fits**:
+- Code-engineering tasks with real scale or multi-person / multi-agent collaboration — new features, refactors, cross-module changes, long-lived projects.
+- Cases that need an **auditable** process: handoffs on disk, gates with confirmation, claims backed by evidence, conventions that accumulate across sessions.
+- Work where quality and process discipline matter more than "fastest possible output" (production code, open source, team projects).
+- Agent environments with subagents, where you want Product / Architect / Developer / Tester / Reviewer / Ops to collaborate in artifact-dependency order.
+
+**Poor fits / trim as needed**:
+- One-shot tiny edits (typo, constant tweak): don't keep the full handoff set — trim to the minimum per ACDL; but if requirements aren't clear (G1 not passed), still don't write code.
+- Pure chat, research, docs, or non-code tasks: this skill does not trigger.
+- Strongly sequential tightly coupled work (e.g. TDD red→green→refactor): use a single agent, don't force parallelism.
+- **Systems without hooks**: this skill is discipline and verifiability, not physical enforcement — it makes violations visible and checkable, but cannot stop an agent from breaking a gate. Don't treat it as a system-level guardrail.
+
+## How to use it
+
+1. **Install**: see "Installation" below — put the directory in your agent's skills location and reload.
+2. **Trigger**: say "开始工程" (the exact four Chinese characters), or let the skill auto-load during day-to-day coding / bug fixing / refactoring / review per its description.
+3. **Classify the task**: requirements clarification → new feature (`workflows/feature.md`) / bugfix (`bugfix.md`) / refactor (`refactor.md`) / investigate (`investigate.md`).
+4. **Pass gates before coding**: confirm G1 (requirements / PRD with testable acceptance) and G2 (design / ADR + contract); if not passed, fill the upstream first — no implementation code.
+5. **Read layers on demand**: read the matching `core/` file when entering a phase; **before writing code**, read the relevant `languages/` file for the detected main language; layer in `topics/` for security / performance / concurrency / API design. Don't read everything at once.
+6. **Multi-agent collaboration** (optional): roles follow artifact-dependency order in form A (sequential role pipeline); enable form B parallelism only inside the developer role / test preparation when files don't overlap and all three gates pass. A defect in an upstream artifact freezes downstream and returns that artifact to its role. See `workflows/multi-agent-feature.md`.
+7. **Code & verify**: small commits, comment public APIs; run real commands and paste real output; label claims measured / inferred / guessed; after two failures, attack the premises.
+8. **Integrate & deliver**: for multi-module work run end-to-end checks — every state write must be verified as "write-then-read"; then review self-audit → delivery notes → (human go/no-go if deployment is involved); write rule changes back to `.project_memory/`.
+9. **Wrap up**: ask for the next requirement and whether anything needs adjusting, then stop and wait.
+
+> Remember: the entry `SKILL.md` is navigation — read the detailed rules on demand via its tables, never from memory.
+
 ## How it works
 
 A four-layer architecture, **thin entry + read on demand** — `SKILL.md` keeps only navigation and red lines in context; the detailed rules live in the files reached through the navigation table, never from memory.
