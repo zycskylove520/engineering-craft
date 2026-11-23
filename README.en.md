@@ -1,8 +1,8 @@
 # engineering-craft · Layered Software Engineering Discipline
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
-[![Pure Markdown](https://img.shields.io/badge/skill-pure%20Markdown-blue.svg)](#why-its-general-purpose)
-[![Agent Agnostic](https://img.shields.io/badge/agent-agnostic-orange.svg)](#why-its-general-purpose)
+[![Pure Markdown](https://img.shields.io/badge/skill-pure%20Markdown-blue.svg)](#installation)
+[![Agent Agnostic](https://img.shields.io/badge/agent-agnostic-orange.svg)](#installation)
 [![Trigger: 开始工程](https://img.shields.io/badge/trigger-%E5%BC%80%E5%A7%8B%E5%B7%A5%E7%A8%8B-purple.svg)](#how-to-trigger-it)
 
 > Language: [中文](./README.md) · [English](./README.en.md)
@@ -52,6 +52,37 @@ Once triggered: determine the task type → read the relevant rule layer → cod
 9. **Wrap up**: ask for the next requirement and whether anything needs adjusting, then stop and wait.
 
 > Remember: the entry `SKILL.md` is navigation — read the detailed rules on demand via its tables, never from memory.
+
+### Usage flow
+
+The full path from "开始工程" to delivery. **Humans make only three calls: confirm acceptance criteria (G1), confirm tech choices (G2), and go/no-go for release**; the agent drives everything else through the gates.
+
+```mermaid
+flowchart TD
+    A[User says 开始工程] --> B[Classify task<br/>feature / bugfix / refactor / investigate]
+    B --> C[Requirements clarification<br/>agent guides PRD: goals / stories / acceptance]
+    C --> D{Acceptance confirmed?<br/>G1}
+    D -- No --> C
+    D -- Yes --> E[Design<br/>agent guides initial architecture: modules / data flow / contracts]
+    E --> F[Pick language & stack<br/>read matching languages file + fix dependency constraints]
+    F --> G{Tech choices confirmed?<br/>G2}
+    G -- No --> E
+    G -- Yes --> H[Plan breakdown<br/>PLAN.md: small steps + acceptance]
+    H --> I[Implementation<br/>small commits / comment public APIs]
+    I --> J{Narrow checks + typecheck?<br/>G3}
+    J -- No --> I
+    J -- Yes --> K[Test & verify<br/>edge cases + real output + evidence grading]
+    K --> L[Integration<br/>end-to-end + write-then-read]
+    L --> M[Review self-audit<br/>Brief + findings / ≤4 rounds]
+    M --> N[Delivery notes<br/>rule changes → .project_memory]
+    N --> O{Deployment involved?<br/>human go/no-go}
+    O -- Yes --> P[Release checklist + rollback + watch items]
+    O -- No --> Q[Ask next requirement + anything to adjust]
+    P --> Q
+    Q --> R([Stop and wait])
+```
+
+> Small tasks trim per ACDL: some handoffs may be skipped, but the G1 entry condition (no code before requirements are clear) is never trimmed.
 
 ## How it works
 
@@ -105,16 +136,9 @@ Multi-agent is an organizational approach, not merely acceleration. Two forms: a
 8. Be capability-honest: rules that only a hook can enforce are written here as discipline; degrade explicitly when tools are absent.
 9. Hard phase gates: never enter a downstream phase while upstream entry conditions are unmet.
 
-## Why it's general-purpose
-
-- The entire content is Markdown text — no code, no build step, no platform-specific API.
-- Methodologies referenced (MetaGPT, Agentic SDLC, ACDL, etc.) are all public, general frameworks.
-- Engineering memory lives in ordinary files in the project directory (`.project_memory/`), with no dependency on any platform's session storage.
-- The entry file is `SKILL.md`, carrying `name` / `description` YAML frontmatter — a convention shared by most agents.
-
 ## Installation
 
-This skill is just a directory with no runtime dependencies. Put it wherever your agent software loads skills from, restart the session (or reload skills), then say "开始工程".
+This skill is just a directory with no runtime dependencies: **pure Markdown — no code, no build, no platform-specific API**; engineering memory is ordinary files in the project (`.project_memory/`), and the entry is `SKILL.md` with YAML frontmatter — usable by any agent that can load a skill directory. Put it wherever your agent software loads skills from, restart the session (or reload skills), then say "开始工程".
 
 Common skills directories (check your software's actual version):
 

@@ -1,8 +1,8 @@
 # engineering-craft · 分层代码工程规范
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
-[![Pure Markdown](https://img.shields.io/badge/skill-pure%20Markdown-blue.svg)](#为什么通用)
-[![Agent Agnostic](https://img.shields.io/badge/agent-agnostic-orange.svg)](#为什么通用)
+[![Pure Markdown](https://img.shields.io/badge/skill-pure%20Markdown-blue.svg)](#安装)
+[![Agent Agnostic](https://img.shields.io/badge/agent-agnostic-orange.svg)](#安装)
 [![Trigger: 开始工程](https://img.shields.io/badge/trigger-%E5%BC%80%E5%A7%8B%E5%B7%A5%E7%A8%8B-purple.svg)](#触发方式)
 
 > 语言：[中文](./README.md) · [English](./README.en.md)
@@ -52,6 +52,37 @@
 9. **收尾**：追问下一需求 + 是否需要调整修正，然后停下等回复。
 
 > 全程记住入口 `SKILL.md` 是导航：具体规范按导航按需读取，不凭记忆跳过查阅。
+
+### 使用流程图
+
+从说「开始工程」到交付的完整路径。**人只拍两个板：确认需求验收（G1）、确认技术选型（G2），以及发布 go/no-go**；其余由 agent 按门推进。
+
+```mermaid
+flowchart TD
+    A[用户说「开始工程」] --> B[定任务类型<br/>新功能 / 修 bug / 重构 / 排查]
+    B --> C[需求澄清<br/>agent 引导写 PRD：目标 / 用户故事 / 验收标准]
+    C --> D{人确认验收标准?<br/>G1}
+    D -- 否 --> C
+    D -- 是 --> E[方案设计<br/>agent 引导初版架构：模块划分 / 数据流 / 接口契约]
+    E --> F[选语言与技术栈<br/>读 languages 对应篇 + 定依赖约束]
+    F --> G{人确认技术选型?<br/>G2}
+    G -- 否 --> E
+    G -- 是 --> H[计划分解<br/>PLAN.md：小步 + 验收]
+    H --> I[编码实现<br/>小步提交 / 公开 API 注释]
+    I --> J{窄检 + 类型检查?<br/>G3}
+    J -- 否 --> I
+    J -- 是 --> K[测试验证<br/>边界异常 + 真实输出 + 证据分级]
+    K --> L[多模块联调<br/>端到端 + 写后能读到]
+    L --> M[评审自审<br/>Brief + findings / 4 轮封顶]
+    M --> N[交付说明<br/>规范变更写回 .project_memory]
+    N --> O{涉及上线?<br/>人做 go/no-go}
+    O -- 是 --> P[发布清单 + 回滚预案 + 观察项]
+    O -- 否 --> Q[追问下一需求 + 是否需要调整]
+    P --> Q
+    Q --> R([停下等回复])
+```
+
+> 小任务按 ACDL 裁剪：可跳过部分交接物，但 G1（需求未明确不写码）这道进入条件不裁剪。
 
 ## 它怎么工作
 
@@ -105,16 +136,9 @@
 8. 能力诚实：hook 才能强制的规则本 skill 只能写成纪律；无工具时如实降级。
 9. 阶段门硬约束：上游进入条件未满足，禁止进入下游。
 
-## 为什么通用
-
-- 全部内容是 Markdown 文本，没有代码、没有构建步骤、没有平台专有 API。
-- 引用的方法论（MetaGPT、Agentic SDLC、ACDL 等）都是公开通用框架。
-- 工程记忆存在项目目录的普通文件里（`.project_memory/`），不依赖任何平台的会话存储。
-- 入口文件是 `SKILL.md`，内含 `name` / `description` 的 YAML frontmatter——多数 agent 的通用约定。
-
 ## 安装
 
-这个 skill 就是一个目录，没有运行时依赖。把它放到你的 agent 软件加载 skill 的位置，重启会话（或触发技能重载），说「开始工程」即可。
+这个 skill 就是一个目录，没有运行时依赖：**全部是 Markdown，无代码、无构建、无平台专有 API**；工程记忆是项目里的普通文件（`.project_memory/`），入口是带 YAML frontmatter 的 `SKILL.md`——任何能加载 skill 目录的 agent 都能用。把它放到你的 agent 软件加载 skill 的位置，重启会话（或触发技能重载），说「开始工程」即可。
 
 常见 skills 目录（以各软件实际版本为准）：
 
