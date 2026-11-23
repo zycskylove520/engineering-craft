@@ -1,19 +1,19 @@
 # CUDA C++ 工程规范（GPU 并行编程）
 
 > 适用版本：CUDA 12.x+ / C++17–C++23（官方 Programming Guide §5.3 支持 C++03/11/14/17/20/23；C++20 需 CUDA 12.x 起）/ Compute Capability 6.0+ ｜ 生态：AI 训练推理、科学计算、高性能计算 ｜ 识别信号：`.cu`/`.cuh`、`nvcc`、`__global__`/`__device__`
-> 通用规范见 `core/`。CUDA 是 **C++ 的扩展**（`nvcc` 编译 C++，`__global__` kernel 也支持模板/类等 C++ 特性）：**host 端代码整体遵循 `cpp.md` 的 Google 风格**；本文件写 device 端与 CUDA 特有的落地方式，以及 CUDA C++ 相对普通 C++ 的限制与约定。（注：lambda 作为 kernel 实参须为带 `__device__`/`__host__ __device__` 的扩展 lambda 且需 `--extended-lambda`，见官方 §5.3.8。）
+> 通用规范见 `core/`。CUDA 是 **C++ 的扩展**（`nvcc` 编译 C++，`__global__` kernel 也支持模板/类等 C++ 特性）：**host 端代码整体遵循 `languages/cpp.md` 的 Google 风格**；本文件写 device 端与 CUDA 特有的落地方式，以及 CUDA C++ 相对普通 C++ 的限制与约定。（注：lambda 作为 kernel 实参须为带 `__device__`/`__host__ __device__` 的扩展 lambda 且需 `--extended-lambda`，见官方 §5.3.8。）
 
 ## 1. 语言定位与适用场景
 GPU 大规模数据并行（SIMT）主力；适合计算密集、高度并行、数据局部性好的问题（矩阵、卷积、归约、蒙特卡洛）。不适合分支发散多、小规模、强串行依赖的任务——搬上 GPU 反而更慢。迁移前先问：并行度够不够、数据搬运成本能否摊薄。
 
 ## 2. 项目结构与模块划分
-- 文件：`.cu`（host+device 混合）、`.cuh`（device 头/模板，**此扩展名为社区/项目约定，NVIDIA 官方未强制**，模板放头文件是 C++ 语言要求）、host 纯 C++ 用 `.cpp` 遵循 `cpp.md`。
+- 文件：`.cu`（host+device 混合）、`.cuh`（device 头/模板，**此扩展名为社区/项目约定，NVIDIA 官方未强制**，模板放头文件是 C++ 语言要求）、host 纯 C++ 用 `.cpp` 遵循 `languages/cpp.md`。
 - 按 kernel 域分文件（如 `kernels/attention.cu`）；host 封装与 device kernel 分离：host 侧负责内存/启动/错误检查，device 侧只做计算。
 - `__host__ __device__` 双版本函数放 `.cuh`；模板 kernel 必须在头文件可见。
 - 用 CMake 的 `enable_language(CUDA)` / `FindCUDAToolkit` 管理，指定 `CMAKE_CUDA_ARCHITECTURES`（目标算力）。
 
 ## 3. 命名规范
-- 继承 host 端 Google 风格（见 `cpp.md`）：类型 PascalCase、函数变量 snake_case、常量 k 前缀、成员尾下划线。
+- 继承 host 端 Google 风格（见 `languages/cpp.md`）：类型 PascalCase、函数变量 snake_case、常量 k 前缀、成员尾下划线。
 - 命名约定（**NVIDIA 官方 CUDA 文档不规定命名风格，以下为项目/团队约定**）：kernel 函数以 `_kernel` 后缀（`reduce_sum_kernel`）与 host 函数区分；device 辅助函数加 `__device__` 并可用 `device_` 前缀；共享内存/寄存器密集变量用 `smem_`/`reg_` 等前缀体现用途。
 
 ## 4. 类型系统与数据建模（CUDA C++）

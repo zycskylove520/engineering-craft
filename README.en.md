@@ -57,9 +57,9 @@ Layered on top of the four directories is a **six-phase pipeline** — Product �
 - **G2**: Design (ADR + interface contract) not confirmed → no coding
 - **G3**: Checks not passed → no review submission
 
-### Capability-aware multi-agent
+### Multi-agent collaboration
 
-Multi-agent is an optional fast path, not the default. Parallelism only when three gates all pass: ① capability gate (the environment has subagent/workflow tools and policy allows it); 2 task-shape gate (≥2 independent units with no overlapping ownership, each with testable acceptance); 3 payoff gate (the task is big enough to amortize coordination cost). Roles form a pipeline (sequential gates); parallelism happens only among independent units within the same phase.
+Multi-agent is an organizational approach, not merely acceleration. Two forms: a **sequential role pipeline** (roles follow strict artifact-dependency order) that can be used as the whole workflow, and **conditional parallelism** inside one role. **Roles follow that order strictly** (product→architecture is causal; review needs the final diff; release needs a human decision — none of these can parallelize). **Only the developer role and test preparation may parallelize conditionally**, and only when all three gates pass: ① capability gate (the environment has subagent tools and policy allows it); ② task-shape gate (≥2 units with no overlapping file ownership, each with testable acceptance); ③ payoff gate (the task is big enough to amortize coordination cost). A defect found in an upstream artifact freezes all downstream units and returns that artifact to its role for revision; an externally unverifiable contract converges to an already-verified mechanism with an ADR record instead of guessing APIs. See `workflows/multi-agent-feature.md` for details.
 
 ### Engineering memory
 
