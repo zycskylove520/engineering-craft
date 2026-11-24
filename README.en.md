@@ -39,6 +39,8 @@ git clone https://github.com/zycskylove520/engineering-craft.git
 
 Say **"开始工程"** (the exact four Chinese characters); it also auto-loads during day-to-day coding, bug fixing, debugging, refactoring, and code review per its description.
 
+The first step after triggering is **one question to you**: whether to build in `<the current session directory>`. The default candidate is the current session directory (not the agent software's own runtime directory); work starts only after you confirm or name a different path, so the project never lands in the wrong place.
+
 ## Three usage scenarios
 
 ### 1. First use (empty project)
@@ -47,8 +49,8 @@ Tell the agent "开始工程" and what you want to build. It first **discusses a
 
 ### 2. Joining an existing project
 
-- **Code exists, no memory yet**: it reads the source, distills the project's architecture, naming, and habits (each with file-path evidence), flags questionable designs and negotiates with you, then builds `.project_memory/`. No unasked rewrites.
-- **Code and memory both present**: it reads `INDEX.md` and the layers first, works within existing conventions, and doesn't rewrite your rules.
+- **Code exists, no memory yet**: it reads the source in batches and decides the document layout itself (organized by "how you'll look it up when writing code", nestable), distilling reusable writing conventions — each with path evidence, rules not inventories. It flags questionable designs, negotiates with you, then builds `.project_memory/`. No unasked rewrites.
+- **Code and memory both present**: it reads `INDEX.md` and the conventions first, works within existing conventions, and doesn't rewrite your rules. **Before writing business/core code it retrieves the relevant conventions and follows the existing style**; new patterns are written back only after real verification.
 - **Don't want the full process**: small changes can trim the flow, but "no code before requirements are clear" never changes.
 
 ### 3. Next time
@@ -70,7 +72,7 @@ Complex tasks advance through six roles, each with a clear job:
 
 The six roles run in **strict artifact-dependency order**: a downstream role starts only after the upstream handoff is on disk; conditional parallelism happens only inside one role when its units own non-overlapping files. A defect in an upstream artifact freezes downstream and returns that artifact for revision, so errors don't propagate.
 
-Only **three decisions are yours** (marked in the table): confirm acceptance criteria, confirm tech choices, and go/no-go when deployment is involved; the agent drives the rest by discipline.
+**Three routine decision points** are yours (bolded in the table): confirm acceptance criteria, confirm tech choices, and go/no-go when deployment is involved; there is also a conditional one — you decide if a review dispute arises (marked in the review row). The agent drives the rest by discipline.
 
 **If your agent software has no multi-agent support**: no problem. A single agent plays the six roles in order, writes each intermediate artifact to a file, and the next phase reads it to continue. Ordering, gates, verification, and memory accumulation all stay the same — you just lose the speed of parallelism. This is not a degraded mode; it's the single-threaded form of the same discipline.
 
@@ -99,12 +101,15 @@ Full runtime rules and engineering memory: `SKILL.md`. Six-role detail: `workflo
 engineering-craft/
 ├── SKILL.md              # thin entry: navigation, red lines, engineering memory
 ├── README.md / README.en.md
-├── core/                 # general rules: requirements, design, coding, test, verify, review, delivery…
-├── workflows/            # feature / bugfix / refactor / investigate / multi-agent
+├── core/                 # general rules; includes memory/ engineering-memory capability cluster
+│   └── memory/           # content model / document tree / retrieval-and-writeback (filename = capability)
+├── workflows/            # init-project-memory / feature / bugfix / refactor / multi-agent…
 ├── languages/            # language rules — read the relevant one before coding
-├── topics/               # cross-cutting: security / performance / concurrency / API design / refactoring
+├── topics/               # cross-cutting: security / performance / concurrency / API design…
 └── CHANGELOG.md / LICENSE
 ```
+
+**Convention-based directories**: each layer's INDEX only declares a read protocol — "the filename is the applicability signal" — instead of registering files. Adding a workflow, capability, language, or topic only creates a new file; **no index changes**.
 
 ## License
 

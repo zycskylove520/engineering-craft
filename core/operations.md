@@ -3,7 +3,7 @@
 > 适用：长任务、上下文过半、离开后回来接力。来源：原 8.7。
 
 ## 1. PROGRESS.md（五节）
-放工作区（临时产物，不进工程记忆——见 `core/project-memory.md` 边界条）：
+放 `.project_memory/tmp/`（临时产物，不进规范层——见 `core/memory/document-tree.md` §7）：
 - **Goal**：含总验收
 - **Done**：每步带命令 + 结果
 - **Next**：首项 = 精确下一步
