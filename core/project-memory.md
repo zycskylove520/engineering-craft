@@ -29,4 +29,4 @@
 - 门反复拦截同类缺失（见 `core/gate-metrics.md` GATE-LOG 回看）→ 视为规范缺陷信号，写回结论标日期与证据指针；原始流水不写。
 - 日常需求不改变规范 → 不写。
 
-> 边界：PLAN.md / PROGRESS.md / GATE-LOG.md / FINDINGS.md 等执行产物统一放 `.project_memory/tmp/`（临时区，不进规范层、INDEX 不登记、可清理——见 `core/memory/document-tree.md` §7），**不散落在项目根**；`open-questions.md` 与 `status.md` 属工程记忆规范层（前者框架问题清单随修复递减，后者项目状况快照），都不放执行任务流水。临时产物完成后只把形成的长期约定写回职责目录。
+> 边界：PLAN.md / PROGRESS.md / GATE-LOG.md / VERIFY-LOG.md / FINDINGS.md 等执行产物统一放 `.project_memory/tmp/`（临时区，不进规范层、INDEX 不登记、可清理——见 `core/memory/document-tree.md` §7），**不散落在项目根**；`open-questions.md` 与 `status.md` 属工程记忆规范层（前者框架问题清单随修复递减，后者项目状况快照），都不放执行任务流水。临时产物完成后只把形成的长期约定写回职责目录。

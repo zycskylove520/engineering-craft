@@ -104,7 +104,7 @@
 
 ## 7. tmp/ · 执行临时产物区（不污染项目空间）
 
-`.project_memory/tmp/` 是项目记忆目录内的**临时区**，专门收纳任务执行产物，避免在项目根散落文件：PLAN.md、PROGRESS.md、GATE-LOG.md、FINDINGS.md、BRIEF.md、notes/、验收记录、联调记录等一律放这里。
+`.project_memory/tmp/` 是项目记忆目录内的**临时区**，专门收纳任务执行产物，避免在项目根散落文件：PLAN.md、PROGRESS.md、GATE-LOG.md、**VERIFY-LOG.md**（验证台账：每行 `- YYYY-MM-DD · <命令> :: <输出摘要>`，TDD 红/绿灯也记这里，见 `core/verification.md` 与 `core/testing-strategy.md`）、FINDINGS.md、BRIEF.md、notes/、验收记录、联调记录等一律放这里。
 
 - **不是职责目录**：tmp/ 不属于 6 个标准职责目录，不参与"按职责分目录"的结构；它是记忆目录内的例外区。
 - **不进规范层**：里面的内容是流水/草稿，不是长期规范；只有经确认的长期约定才从 tmp/ 提炼进职责目录（提炼后 tmp 原件可清）。
